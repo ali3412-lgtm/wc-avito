@@ -1,7 +1,9 @@
-# Development workspace - ignore all except examples
-_dev/*
-!_dev/*.example
-!_dev/README.md
+# Debug export files
+avito-debug-*.json
+
+# Test files
+test.txt
+*.test.php
 
 # IDE
 .vscode/

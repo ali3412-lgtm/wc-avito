@@ -78,8 +78,14 @@ function generate_avito_xml() {
                 array(
                     'key' => 'avito_export',
                     'value' => 'yes',
-                    'compare' => '='
-                )
+                    'compare' => '=',
+                    'type' => 'CHAR'
+                ),
+                array(
+                    'key' => 'avito_export',
+                    'compare' => 'EXISTS'
+                ),
+                'relation' => 'AND'
             )
         ));
         
@@ -110,9 +116,15 @@ function generate_avito_xml() {
                     array(
                         'key' => 'avito_export',
                         'value' => 'yes',
-                        'compare' => '='
+                        'compare' => '=',
+                        'type' => 'CHAR'
+                    ),
+                    array(
+                        'key' => 'avito_export',
+                        'compare' => 'EXISTS'
                     )
-                )
+                ),
+                'meta_relation' => 'AND'
             ));
             
             foreach ($products as $product) {
@@ -905,8 +917,14 @@ function get_products_count_in_category($category_id) {
             array(
                 'key' => 'avito_export',
                 'value' => 'yes',
-                'compare' => '='
-            )
+                'compare' => '=',
+                'type' => 'CHAR'
+            ),
+            array(
+                'key' => 'avito_export',
+                'compare' => 'EXISTS'
+            ),
+            'relation' => 'AND'
         ),
         'posts_per_page' => 1, // Нам нужно только количество
         'fields' => 'ids', // Получаем только ID для экономии памяти

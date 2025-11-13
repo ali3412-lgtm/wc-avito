@@ -399,9 +399,15 @@ function wc_avito_export_debug_info() {
             array(
                 'key' => 'avito_export',
                 'value' => 'yes',
-                'compare' => '='
+                'compare' => '=',
+                'type' => 'CHAR'
+            ),
+            array(
+                'key' => 'avito_export',
+                'compare' => 'EXISTS'
             )
-        )
+        ),
+        'meta_relation' => 'AND'
     ));
     
     $debug_data['products_for_export'] = array(
