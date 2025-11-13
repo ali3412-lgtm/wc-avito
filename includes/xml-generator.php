@@ -128,7 +128,11 @@ function generate_avito_xml() {
             ));
             
             foreach ($products as $product) {
-                add_product_ad($xml, $product, true);
+                // Дополнительная проверка на случай проблем с meta_query
+                $avito_export = get_post_meta($product->get_id(), 'avito_export', true);
+                if ($avito_export === 'yes') {
+                    add_product_ad($xml, $product, true);
+                }
             }
             
             $offset += $batch_size;
