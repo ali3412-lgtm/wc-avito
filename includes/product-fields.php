@@ -44,6 +44,7 @@ function add_avito_export_category_field() {
 function edit_avito_export_category_field($term, $taxonomy) {
     // Получаем все meta-данные категории
     $avito_export = get_term_meta($term->term_id, 'avito_export', true);
+    $avito_apply_to_products = get_term_meta($term->term_id, 'avito_apply_to_products', true);
     $avito_category = get_term_meta($term->term_id, 'avito_category', true);
 
     $avito_contact_method = get_term_meta($term->term_id, 'avito_contact_method', true);
@@ -71,6 +72,14 @@ function edit_avito_export_category_field($term, $taxonomy) {
         <td>
             <input type="checkbox" name="avito_export" id="avito_export" value="yes" <?php checked($avito_export, 'yes'); ?> />
             <p class="description"><code>avito_export</code></p>
+        </td>
+    </tr>
+    
+    <tr class="form-field">
+        <th scope="row" valign="top"><label for="avito_apply_to_products">Применять настройки к товарам</label></th>
+        <td>
+            <input type="checkbox" name="avito_apply_to_products" id="avito_apply_to_products" value="yes" <?php checked($avito_apply_to_products, 'yes'); ?> />
+            <p class="description">Если включено, все поля этой категории будут применяться к товарам категории. <code>avito_apply_to_products</code></p>
         </td>
     </tr>
     
@@ -324,6 +333,13 @@ function save_avito_export_category_field($term_id, $tt_id) {
         update_term_meta($term_id, 'avito_export', 'yes');
     } else {
         delete_term_meta($term_id, 'avito_export');
+    }
+    
+    // Сохраняем флаг применения настроек к товарам
+    if (isset($_POST['avito_apply_to_products'])) {
+        update_term_meta($term_id, 'avito_apply_to_products', 'yes');
+    } else {
+        delete_term_meta($term_id, 'avito_apply_to_products');
     }
     
     // Массив полей для сохранения
