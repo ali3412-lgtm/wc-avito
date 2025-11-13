@@ -213,17 +213,9 @@ function validate_avito_xml($xml_string) {
  * Устанавливает общие настройки объявления
  */
 function set_common_ad_settings($ad, $product = null, $is_active = true, $category_id = null) {
-    // Проверяем, нужно ли применять настройки категории к товарам
-    $apply_category_settings = true;
-    if ($product && $category_id) {
-        $apply_to_products = get_term_meta($category_id, 'avito_apply_to_products', true);
-        // Если флаг не установлен (пустой), то НЕ применяем настройки категории
-        $apply_category_settings = ($apply_to_products === 'yes');
-    }
-    
     // Категория Avito - используем категорийная настройка или по умолчанию
     $avito_category = 'Предложение услуг'; // По умолчанию
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_avito_category = get_term_meta($category_id, 'avito_category', true);
         if (!empty($category_avito_category)) {
             $avito_category = $category_avito_category;
@@ -236,7 +228,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     $ad->addChild('Category', htmlspecialchars($avito_category));
     
     // Добавляем поле ServiceType из категории
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $service_type = get_term_meta($category_id, 'avito_service_type', true);
         if (!empty($service_type)) {
             $ad->addChild('ServiceType', htmlspecialchars($service_type));
@@ -258,7 +250,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // Способ связи - категорийный или общий
     $contact_method = get_option('wc_avito_xml_contact_method', 'По телефону и в сообщениях');
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_contact_method = get_term_meta($category_id, 'avito_contact_method', true);
         if (!empty($category_contact_method)) {
             $contact_method = $category_contact_method;
@@ -274,7 +266,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     if ($product) {
         // Для товаров сначала проверяем категорийную настройку, потом товарную
-        if ($category_id && $apply_category_settings) {
+        if ($category_id) {
             $category_date_begin = get_term_meta($category_id, 'avito_date_begin', true);
             if (!empty($category_date_begin)) {
                 $date = DateTime::createFromFormat('Y-m-d', $category_date_begin);
@@ -295,7 +287,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
         }
     } else {
         // Для категорийных объявлений проверяем настройку категории
-        if ($category_id && $apply_category_settings) {
+        if ($category_id) {
             $category_date_begin = get_term_meta($category_id, 'avito_date_begin', true);
             if (!empty($category_date_begin)) {
                 $date = DateTime::createFromFormat('Y-m-d', $category_date_begin);
@@ -316,7 +308,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     // Определяем дату окончания размещения
     $date_end = $today->modify('+30 days')->format('Y-m-d'); // По умолчанию
     
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_date_end = get_term_meta($category_id, 'avito_date_end', true);
         if (!empty($category_date_end)) {
             $date = DateTime::createFromFormat('Y-m-d', $category_date_end);
@@ -330,7 +322,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // Имя менеджера - категорийное или общее
     $manager_name = get_option('wc_avito_xml_manager_name', '');
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_manager_name = get_term_meta($category_id, 'avito_manager_name', true);
         if (!empty($category_manager_name)) {
             $manager_name = $category_manager_name;
@@ -340,7 +332,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // Контактный телефон - категорийный или общий
     $contact_phone = get_option('wc_avito_xml_contact_phone', '');
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_contact_phone = get_term_meta($category_id, 'avito_contact_phone', true);
         if (!empty($category_contact_phone)) {
             $contact_phone = $category_contact_phone;
@@ -350,7 +342,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // Адрес - категорийный или общий
     $address = get_option('wc_avito_xml_address', '');
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_address = get_term_meta($category_id, 'avito_address', true);
         if (!empty($category_address)) {
             $address = $category_address;
@@ -360,7 +352,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // Интернет-звонки - категорийные или общие
     $internet_calls = get_option('wc_avito_xml_internet_calls', '');
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_internet_calls = get_term_meta($category_id, 'avito_internet_calls', true);
         if ($category_internet_calls === 'yes') {
             $internet_calls = 'Да';
@@ -373,7 +365,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     $ad->addChild('InternetCalls', $internet_calls);
     
     // Добавляем дополнительные поля для услуг из категории
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $scope = get_term_meta($category_id, 'avito_scope', true);
         if (!empty($scope)) {
             // Заменяем ", " на "|" в поле Scope
@@ -459,7 +451,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // ListingFee - тип платного размещения
     $listing_fee = 'Package'; // По умолчанию
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_listing_fee = get_term_meta($category_id, 'avito_listing_fee', true);
         if (!empty($category_listing_fee)) {
             $listing_fee = $category_listing_fee;
@@ -469,7 +461,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     
     // AdStatus - услуга продвижения
     $ad_status = 'Free'; // По умолчанию
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         $category_ad_status = get_term_meta($category_id, 'avito_ad_status', true);
         if (!empty($category_ad_status)) {
             $ad_status = $category_ad_status;
@@ -478,7 +470,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     $ad->addChild('AdStatus', $ad_status);
     
     // Добавляем поля продвижения
-    if ($category_id && $apply_category_settings) {
+    if ($category_id) {
         // Поле Promo
         $promo = get_term_meta($category_id, 'avito_promo', true);
         if (!empty($promo)) {
