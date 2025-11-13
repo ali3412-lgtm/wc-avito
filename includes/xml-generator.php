@@ -368,12 +368,8 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     if ($category_id) {
         $scope = get_term_meta($category_id, 'avito_scope', true);
         if (!empty($scope)) {
-            // Проверяем, нужна ли автозамена разделителей
-            $auto_separator = get_term_meta($category_id, 'avito_scope_auto_separator', true);
-            if ($auto_separator === 'yes') {
-                // Заменяем ", " на "|" в поле Scope
-                $scope = str_replace(', ', '|', $scope);
-            }
+            // Заменяем ", " на "|" в поле Scope
+            $scope = str_replace(', ', '|', $scope);
             $ad->addChild('Scope', htmlspecialchars($scope));
         }
         
@@ -735,7 +731,17 @@ function add_product_ad($xml, $product, $is_active) {
     $categories = wp_get_post_terms($product->get_id(), 'product_cat');
     $category_id = !empty($categories) ? $categories[0]->term_id : null;
     
-    set_common_ad_settings($ad, $product, $is_active, $category_id);
+    // Проверяем, разрешено ли применять настройки категории к товарам
+    $apply_category_settings = false;
+    if ($category_id) {
+        $apply_to_products = get_term_meta($category_id, 'avito_apply_to_products', true);
+        $apply_category_settings = ($apply_to_products === 'yes');
+    }
+    
+    // Если настройки категории не должны применяться, передаём null
+    $effective_category_id = $apply_category_settings ? $category_id : null;
+    
+    set_common_ad_settings($ad, $product, $is_active, $effective_category_id);
 
     // Получаем значение поля 'short_avalible'
     $short_avalible = get_post_meta($product->get_id(), 'short_avalible', true);
