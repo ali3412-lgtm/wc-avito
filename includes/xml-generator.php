@@ -368,8 +368,12 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
     if ($category_id) {
         $scope = get_term_meta($category_id, 'avito_scope', true);
         if (!empty($scope)) {
-            // Заменяем ", " на "|" в поле Scope
-            $scope = str_replace(', ', '|', $scope);
+            // Проверяем, нужна ли автозамена разделителей
+            $auto_separator = get_term_meta($category_id, 'avito_scope_auto_separator', true);
+            if ($auto_separator === 'yes') {
+                // Заменяем ", " на "|" в поле Scope
+                $scope = str_replace(', ', '|', $scope);
+            }
             $ad->addChild('Scope', htmlspecialchars($scope));
         }
         

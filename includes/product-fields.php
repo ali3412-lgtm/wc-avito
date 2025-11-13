@@ -58,6 +58,7 @@ function edit_avito_export_category_field($term, $taxonomy) {
     // Новые поля для CSV экспорта
     $avito_calls_devices = get_term_meta($term->term_id, 'avito_calls_devices', true);
     $avito_scope = get_term_meta($term->term_id, 'avito_scope', true);
+    $avito_scope_auto_separator = get_term_meta($term->term_id, 'avito_scope_auto_separator', true);
     $avito_work_format = get_term_meta($term->term_id, 'avito_work_format', true);
     $avito_work_experience = get_term_meta($term->term_id, 'avito_work_experience', true);
     $avito_take_urgent_orders = get_term_meta($term->term_id, 'avito_take_urgent_orders', true);
@@ -112,10 +113,20 @@ function edit_avito_export_category_field($term, $taxonomy) {
         <th scope="row" valign="top"><label for="avito_scope">Область деятельности</label></th>
         <td>
             <input type="text" name="avito_scope" id="avito_scope" value="<?php echo esc_attr($avito_scope ?? ''); ?>" />
-            <p class="description"><code>Scope</code></p>
+            <p class="description"><code>Scope</code> Например: Квартиры, Дома, Офисы</p>
         </td>
     </tr>
     
+    <tr class="form-field">
+        <th scope="row" valign="top"><label for="avito_scope_auto_separator">Автозамена разделителей</label></th>
+        <td>
+            <label>
+                <input type="checkbox" name="avito_scope_auto_separator" id="avito_scope_auto_separator" value="yes" <?php checked($avito_scope_auto_separator ?? '', 'yes'); ?> />
+                Автоматически заменять ", " на "|" в поле Scope
+            </label>
+            <p class="description">Если включено, запятые будут заменены на вертикальные черты. Например: "Квартиры, Дома" → "Квартиры|Дома"</p>
+        </td>
+    </tr>
     
     <!-- Дополнительные поля -->
     <tr class="form-field">
@@ -324,6 +335,13 @@ function save_avito_export_category_field($term_id, $tt_id) {
         update_term_meta($term_id, 'avito_export', 'yes');
     } else {
         delete_term_meta($term_id, 'avito_export');
+    }
+    
+    // Сохраняем автозамену разделителей для Scope
+    if (isset($_POST['avito_scope_auto_separator'])) {
+        update_term_meta($term_id, 'avito_scope_auto_separator', 'yes');
+    } else {
+        delete_term_meta($term_id, 'avito_scope_auto_separator');
     }
     
     // Массив полей для сохранения
