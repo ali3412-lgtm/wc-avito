@@ -1,14 +1,7 @@
-# Debug export files (корневая директория)
-/avito-debug-*.json
-/avito-*.json
-
-# Test files (корневая директория)
-/test.txt
-/test-*.xml
-/test-*.json
-/*.test.php
-/notes.md
-/TODO.md
+# Development workspace - ignore all except examples
+_dev/*
+!_dev/*.example
+!_dev/README.md
 
 # IDE
 .vscode/
