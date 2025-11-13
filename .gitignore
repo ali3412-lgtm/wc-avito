@@ -1,0 +1,24 @@
+# Debug export files
+avito-debug-*.json
+
+# Test files
+test.txt
+*.test.php
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# WordPress
+wp-config.php
+.htaccess
+
+# Logs
+*.log
