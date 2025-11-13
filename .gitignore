@@ -1,9 +1,14 @@
-# Debug export files
-avito-debug-*.json
+# Debug export files (корневая директория)
+/avito-debug-*.json
+/avito-*.json
 
-# Test files
-test.txt
-*.test.php
+# Test files (корневая директория)
+/test.txt
+/test-*.xml
+/test-*.json
+/*.test.php
+/notes.md
+/TODO.md
 
 # IDE
 .vscode/
