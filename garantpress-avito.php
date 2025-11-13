@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: WC Avito XML Export
- * Plugin URI: 
+ * Plugin Name: GarantPress Avito Export
+ * Plugin URI: https://github.com/ali3412-lgtm/wc-avito
  * Description: Экспорт товаров WooCommerce на Avito в формате XML
  * Version: 1.0.0
- * Author: 
- * Author URI: 
- * Text Domain: wc-avito-vdom
+ * Author: GarantPress
+ * Author URI: https://press18.ru
+ * Text Domain: garantpress-avito
  * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.2
