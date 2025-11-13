@@ -775,7 +775,7 @@ function add_product_ad($xml, $product, $is_active) {
     if (!empty($avito_title)) {
         $title = $avito_title;
     } else {
-        $title = $product->get_name() . ' – аренда';
+        $title = $product->get_name();
     }
     $ad->addChild('Title', $title);
     
