@@ -788,17 +788,14 @@ function add_product_ad($xml, $product, $is_active) {
     // Получаем содержимое поля avito_description
     $avito_description = get_post_meta($product->get_id(), 'avito_description', true);
 
+    // Используем пользовательское описание если задано, иначе описание товара
     if (!empty($avito_description)) {
-        // Если avito_description не пустое, добавляем цены в начало
-        $full_description = $price_info . $avito_description . get_common_description($deposit) . "<p>Нужен другой инструмент? Обращайтесь, постараемся подобрать!</p>";
+        $description = $avito_description;
     } else {
-        // Если avito_description пустое, добавляем цены после краткого описания
-        $description_prefix = '<p>' . $product->get_name() . ' в аренду в Ижевске.</p>';
-        $attributes = get_product_attributes($product);
-        $full_description = $price_info . $description_prefix . $attributes . get_common_description($deposit) . "<p>Нужен другой инструмент? Обращайтесь, постараемся подобрать!</p>" . $product->get_description();
+        $description = $product->get_description();
     }
 
-    add_description_to_ad($ad, $full_description);
+    add_description_to_ad($ad, $description);
 
     // Устанавливаем цену объявления
     if ($has_no_3h_rental) {
