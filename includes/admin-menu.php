@@ -332,31 +332,64 @@ function wc_avito_export_debug_info() {
     );
     
     // 2. Все настройки плагина
-    $debug_data['plugin_settings'] = array(
+    $plugin_settings = array(
         'enable_categories' => get_option('wc_avito_xml_enable_categories', '1'),
         'enable_products' => get_option('wc_avito_xml_enable_products', '1'),
         'enable_main_ad' => get_option('wc_avito_xml_enable_main_ad', '1'),
         'disable_single_product_categories' => get_option('wc_avito_xml_disable_single_product_categories', '1'),
-        
-        // Контактные данные
-        'contact_phone' => get_option('wc_avito_xml_contact_phone', ''),
-        'contact_method' => get_option('wc_avito_xml_contact_method', ''),
-        'manager_name' => get_option('wc_avito_xml_manager_name', ''),
-        'address' => get_option('wc_avito_xml_address', ''),
-        'internet_calls' => get_option('wc_avito_xml_internet_calls', ''),
-        'latitude' => get_option('wc_avito_xml_latitude', ''),
-        'longitude' => get_option('wc_avito_xml_longitude', ''),
-        'logo' => get_option('wc_avito_xml_logo', ''),
-        'work_days' => get_option('wc_avito_xml_work_days', ''),
-        
-        // Расписание
         'schedule_enabled' => get_option('wc_avito_xml_schedule_enabled', '1'),
         'schedule_interval' => get_option('wc_avito_xml_schedule_interval', 'thirty_minutes'),
-        
-        // Логирование
         'enable_logging' => get_option('wc_avito_xml_enable_logging', '1'),
         'notify_errors' => get_option('wc_avito_xml_notify_errors', '0'),
     );
+    
+    // Контактные данные - только непустые
+    $contact_phone = get_option('wc_avito_xml_contact_phone', '');
+    if (!empty($contact_phone)) {
+        $plugin_settings['contact_phone'] = $contact_phone;
+    }
+    
+    $contact_method = get_option('wc_avito_xml_contact_method', '');
+    if (!empty($contact_method)) {
+        $plugin_settings['contact_method'] = $contact_method;
+    }
+    
+    $manager_name = get_option('wc_avito_xml_manager_name', '');
+    if (!empty($manager_name)) {
+        $plugin_settings['manager_name'] = $manager_name;
+    }
+    
+    $address = get_option('wc_avito_xml_address', '');
+    if (!empty($address)) {
+        $plugin_settings['address'] = $address;
+    }
+    
+    $internet_calls = get_option('wc_avito_xml_internet_calls', '');
+    if (!empty($internet_calls)) {
+        $plugin_settings['internet_calls'] = $internet_calls;
+    }
+    
+    $latitude = get_option('wc_avito_xml_latitude', '');
+    if (!empty($latitude)) {
+        $plugin_settings['latitude'] = $latitude;
+    }
+    
+    $longitude = get_option('wc_avito_xml_longitude', '');
+    if (!empty($longitude)) {
+        $plugin_settings['longitude'] = $longitude;
+    }
+    
+    $logo = get_option('wc_avito_xml_logo', '');
+    if (!empty($logo)) {
+        $plugin_settings['logo'] = $logo;
+    }
+    
+    $work_days = get_option('wc_avito_xml_work_days', '');
+    if (!empty($work_days)) {
+        $plugin_settings['work_days'] = $work_days;
+    }
+    
+    $debug_data['plugin_settings'] = $plugin_settings;
     
     // 3. Информация о товарах для экспорта
     $products = wc_get_products(array(
@@ -380,37 +413,87 @@ function wc_avito_export_debug_info() {
         $product_data = array(
             'id' => $product->get_id(),
             'name' => $product->get_name(),
-            'sku' => $product->get_sku(),
             'type' => $product->get_type(),
-            'status' => $product->get_status(),
-            'price' => $product->get_price(),
-            'regular_price' => $product->get_regular_price(),
-            'sale_price' => $product->get_sale_price(),
-            'categories' => array(),
-            'meta_fields' => array(
-                'avito_export' => get_post_meta($product->get_id(), 'avito_export', true),
-                'avito_title' => get_post_meta($product->get_id(), 'avito_title', true),
-                'avito_description' => get_post_meta($product->get_id(), 'avito_description', true),
-                'avito_specialty' => get_post_meta($product->get_id(), 'avito_specialty', true),
-                'short_avalible' => get_post_meta($product->get_id(), 'short_avalible', true),
-                'deposit_amount' => get_post_meta($product->get_id(), 'deposit_amount', true),
-            )
+            'price' => $product->get_price()
         );
         
-        // Добавляем категории
-        $categories = wp_get_post_terms($product->get_id(), 'product_cat');
-        foreach ($categories as $category) {
-            $product_data['categories'][] = array(
-                'id' => $category->term_id,
-                'name' => $category->name,
-                'slug' => $category->slug
-            );
+        // Добавляем только непустые поля
+        $sku = $product->get_sku();
+        if (!empty($sku)) {
+            $product_data['sku'] = $sku;
         }
         
-        // Для вариативных товаров добавляем информацию о вариациях
+        // Статус только если не publish
+        if ($product->get_status() !== 'publish') {
+            $product_data['status'] = $product->get_status();
+        }
+        
+        // Цены только если отличаются от основной
+        $regular_price = $product->get_regular_price();
+        $sale_price = $product->get_sale_price();
+        if (!empty($regular_price) && $regular_price != $product->get_price()) {
+            $product_data['regular_price'] = $regular_price;
+        }
+        if (!empty($sale_price)) {
+            $product_data['sale_price'] = $sale_price;
+        }
+        
+        // Категории - только ID и название
+        $categories = wp_get_post_terms($product->get_id(), 'product_cat');
+        if (!empty($categories)) {
+            $product_data['categories'] = array();
+            foreach ($categories as $category) {
+                $product_data['categories'][] = array(
+                    'id' => $category->term_id,
+                    'name' => $category->name
+                );
+            }
+        }
+        
+        // Мета-поля - только заполненные
+        $meta_fields = array();
+        $avito_export = get_post_meta($product->get_id(), 'avito_export', true);
+        if (!empty($avito_export)) {
+            $meta_fields['avito_export'] = $avito_export;
+        }
+        
+        $avito_title = get_post_meta($product->get_id(), 'avito_title', true);
+        if (!empty($avito_title)) {
+            $meta_fields['avito_title'] = $avito_title;
+        }
+        
+        $avito_description = get_post_meta($product->get_id(), 'avito_description', true);
+        if (!empty($avito_description)) {
+            $meta_fields['avito_description'] = $avito_description;
+        }
+        
+        $avito_specialty = get_post_meta($product->get_id(), 'avito_specialty', true);
+        if (!empty($avito_specialty)) {
+            $meta_fields['avito_specialty'] = $avito_specialty;
+        }
+        
+        $short_avalible = get_post_meta($product->get_id(), 'short_avalible', true);
+        if (!empty($short_avalible)) {
+            $meta_fields['short_avalible'] = $short_avalible;
+        }
+        
+        $deposit_amount = get_post_meta($product->get_id(), 'deposit_amount', true);
+        if (!empty($deposit_amount)) {
+            $meta_fields['deposit_amount'] = $deposit_amount;
+        }
+        
+        if (!empty($meta_fields)) {
+            $product_data['meta_fields'] = $meta_fields;
+        }
+        
+        // Для вариативных товаров - только если цены отличаются
         if ($product->is_type('variable')) {
-            $product_data['variation_price_min'] = $product->get_variation_price('min', true);
-            $product_data['variation_price_max'] = $product->get_variation_price('max', true);
+            $var_min = $product->get_variation_price('min', true);
+            $var_max = $product->get_variation_price('max', true);
+            if ($var_min != $var_max) {
+                $product_data['variation_price_min'] = $var_min;
+                $product_data['variation_price_max'] = $var_max;
+            }
         }
         
         $debug_data['products_for_export']['products'][] = $product_data;
@@ -428,22 +511,64 @@ function wc_avito_export_debug_info() {
     );
     
     foreach ($categories as $category) {
-        $debug_data['categories']['categories'][] = array(
+        $category_data = array(
             'id' => $category->term_id,
-            'name' => $category->name,
-            'slug' => $category->slug,
-            'count' => $category->count,
-            'meta_fields' => array(
-                'avito_export' => get_term_meta($category->term_id, 'avito_export', true),
-                'avito_category' => get_term_meta($category->term_id, 'avito_category', true),
-                'avito_price' => get_term_meta($category->term_id, 'avito_price', true),
-                'avito_contact_method' => get_term_meta($category->term_id, 'avito_contact_method', true),
-                'avito_manager_name' => get_term_meta($category->term_id, 'avito_manager_name', true),
-                'avito_contact_phone' => get_term_meta($category->term_id, 'avito_contact_phone', true),
-                'avito_address' => get_term_meta($category->term_id, 'avito_address', true),
-                'avito_internet_calls' => get_term_meta($category->term_id, 'avito_internet_calls', true),
-            )
+            'name' => $category->name
         );
+        
+        // Количество товаров только если больше 0
+        if ($category->count > 0) {
+            $category_data['count'] = $category->count;
+        }
+        
+        // Мета-поля - только заполненные
+        $meta_fields = array();
+        
+        $avito_export = get_term_meta($category->term_id, 'avito_export', true);
+        if (!empty($avito_export)) {
+            $meta_fields['avito_export'] = $avito_export;
+        }
+        
+        $avito_category = get_term_meta($category->term_id, 'avito_category', true);
+        if (!empty($avito_category)) {
+            $meta_fields['avito_category'] = $avito_category;
+        }
+        
+        $avito_price = get_term_meta($category->term_id, 'avito_price', true);
+        if (!empty($avito_price)) {
+            $meta_fields['avito_price'] = $avito_price;
+        }
+        
+        $avito_contact_method = get_term_meta($category->term_id, 'avito_contact_method', true);
+        if (!empty($avito_contact_method)) {
+            $meta_fields['avito_contact_method'] = $avito_contact_method;
+        }
+        
+        $avito_manager_name = get_term_meta($category->term_id, 'avito_manager_name', true);
+        if (!empty($avito_manager_name)) {
+            $meta_fields['avito_manager_name'] = $avito_manager_name;
+        }
+        
+        $avito_contact_phone = get_term_meta($category->term_id, 'avito_contact_phone', true);
+        if (!empty($avito_contact_phone)) {
+            $meta_fields['avito_contact_phone'] = $avito_contact_phone;
+        }
+        
+        $avito_address = get_term_meta($category->term_id, 'avito_address', true);
+        if (!empty($avito_address)) {
+            $meta_fields['avito_address'] = $avito_address;
+        }
+        
+        $avito_internet_calls = get_term_meta($category->term_id, 'avito_internet_calls', true);
+        if (!empty($avito_internet_calls)) {
+            $meta_fields['avito_internet_calls'] = $avito_internet_calls;
+        }
+        
+        if (!empty($meta_fields)) {
+            $category_data['meta_fields'] = $meta_fields;
+        }
+        
+        $debug_data['categories']['categories'][] = $category_data;
     }
     
     // 5. Информация о cron задачах
