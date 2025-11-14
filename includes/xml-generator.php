@@ -860,10 +860,32 @@ function add_description_to_ad($ad, $description) {
 function add_product_images($ad, $product) {
     $images = $ad->addChild('Images');
 
-    // Добавляем только основное изображение товара
+    $max_images = 10;
+    $added = 0;
+    $used_ids = array();
+
+    // Добавляем основное изображение товара первым
     $main_image_id = $product->get_image_id();
     if ($main_image_id) {
         add_image_to_ad($images, $main_image_id);
+        $used_ids[$main_image_id] = true;
+        $added++;
+    }
+
+    // Добавляем изображения из галереи, пока не достигнем лимита
+    $gallery_image_ids = $product->get_gallery_image_ids();
+    if (!empty($gallery_image_ids)) {
+        foreach ($gallery_image_ids as $image_id) {
+            if ($added >= $max_images) {
+                break;
+            }
+
+            if ($image_id && !isset($used_ids[$image_id])) {
+                add_image_to_ad($images, $image_id);
+                $used_ids[$image_id] = true;
+                $added++;
+            }
+        }
     }
 }
 
