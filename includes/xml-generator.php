@@ -764,7 +764,33 @@ function add_product_ad($xml, $product, $is_active) {
 
     add_description_to_ad($ad, $description);
 
-    // Устанавливаем цену объявления из WooCommerce
+    // Обязательные для Avito поля товара
+    $ad_type = get_post_meta($product->get_id(), 'avito_ad_type', true);
+    if (!empty($ad_type)) {
+        $ad->addChild('AdType', htmlspecialchars($ad_type));
+    }
+
+    $condition = get_post_meta($product->get_id(), 'avito_condition', true);
+    if (!empty($condition)) {
+        $ad->addChild('Condition', htmlspecialchars($condition));
+    }
+
+    $goods_type = get_post_meta($product->get_id(), 'avito_goods_type', true);
+    if (!empty($goods_type)) {
+        $ad->addChild('GoodsType', htmlspecialchars($goods_type));
+    }
+
+    $goods_subtype = get_post_meta($product->get_id(), 'avito_goods_subtype', true);
+    if (!empty($goods_subtype)) {
+        $ad->addChild('GoodsSubType', htmlspecialchars($goods_subtype));
+    }
+
+    $interior_subtype = get_post_meta($product->get_id(), 'avito_interior_subtype', true);
+    if (!empty($interior_subtype)) {
+        $ad->addChild('InteriorSubType', htmlspecialchars($interior_subtype));
+    }
+
+    // Устанавливаем цену объявления
     $ad->addChild('Price', $price);
 }
 

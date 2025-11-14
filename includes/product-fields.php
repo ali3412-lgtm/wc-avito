@@ -549,3 +549,83 @@ function save_avito_price_field($post_id) {
     $avito_price = isset($_POST['avito_price']) ? wc_format_decimal($_POST['avito_price']) : '';
     update_post_meta($post_id, 'avito_price', $avito_price);
 }
+
+/**
+ * Добавляем обязательные поля Avito для товаров
+ */
+add_action('woocommerce_product_options_general_product_data', 'add_avito_required_fields');
+add_action('woocommerce_process_product_meta', 'save_avito_required_fields');
+
+function add_avito_required_fields() {
+    echo '<div class="options_group">';
+
+    woocommerce_wp_select(array(
+        'id' => 'avito_ad_type',
+        'label' => 'Тип объявления (AdType)',
+        'options' => array(
+            '' => '— Не выбрано —',
+            'Товар произведён мной' => 'Товар произведён мной',
+            'Товар куплен на продажу' => 'Товар куплен на продажу'
+        ),
+        'description' => 'Значение тега <AdType> для XML Avito',
+        'desc_tip' => true
+    ));
+
+    woocommerce_wp_select(array(
+        'id' => 'avito_condition',
+        'label' => 'Состояние (Condition)',
+        'options' => array(
+            '' => '— Не выбрано —',
+            'Новое' => 'Новое',
+            'Б/у' => 'Б/у'
+        ),
+        'description' => 'Значение тега <Condition> для XML Avito',
+        'desc_tip' => true
+    ));
+
+    woocommerce_wp_text_input(array(
+        'id' => 'avito_goods_type',
+        'label' => 'Тип товара (GoodsType)',
+        'description' => 'Например: Кухонные гарнитуры',
+        'desc_tip' => true
+    ));
+
+    woocommerce_wp_text_input(array(
+        'id' => 'avito_goods_subtype',
+        'label' => 'Подтип товара (GoodsSubType)',
+        'description' => 'Например: Картины, постеры и рамки',
+        'desc_tip' => true
+    ));
+
+    woocommerce_wp_text_input(array(
+        'id' => 'avito_interior_subtype',
+        'label' => 'Подтип интерьера (InteriorSubType)',
+        'description' => 'Например: Новогодние украшения',
+        'desc_tip' => true
+    ));
+
+    echo '</div>';
+}
+
+function save_avito_required_fields($post_id) {
+    $ad_type = isset($_POST['avito_ad_type']) ? sanitize_text_field($_POST['avito_ad_type']) : '';
+    if (!in_array($ad_type, array('Товар произведён мной', 'Товар куплен на продажу'), true)) {
+        $ad_type = '';
+    }
+    update_post_meta($post_id, 'avito_ad_type', $ad_type);
+
+    $condition = isset($_POST['avito_condition']) ? sanitize_text_field($_POST['avito_condition']) : '';
+    if (!in_array($condition, array('Новое', 'Б/у'), true)) {
+        $condition = '';
+    }
+    update_post_meta($post_id, 'avito_condition', $condition);
+
+    $goods_type = isset($_POST['avito_goods_type']) ? sanitize_text_field($_POST['avito_goods_type']) : '';
+    update_post_meta($post_id, 'avito_goods_type', $goods_type);
+
+    $goods_subtype = isset($_POST['avito_goods_subtype']) ? sanitize_text_field($_POST['avito_goods_subtype']) : '';
+    update_post_meta($post_id, 'avito_goods_subtype', $goods_subtype);
+
+    $interior_subtype = isset($_POST['avito_interior_subtype']) ? sanitize_text_field($_POST['avito_interior_subtype']) : '';
+    update_post_meta($post_id, 'avito_interior_subtype', $interior_subtype);
+}

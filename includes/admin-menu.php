@@ -488,6 +488,31 @@ function wc_avito_export_debug_info() {
             $meta_fields['avito_price'] = $avito_price;
         }
         
+        $avito_ad_type = get_post_meta($product->get_id(), 'avito_ad_type', true);
+        if (!empty($avito_ad_type)) {
+            $meta_fields['avito_ad_type'] = $avito_ad_type;
+        }
+        
+        $avito_condition = get_post_meta($product->get_id(), 'avito_condition', true);
+        if (!empty($avito_condition)) {
+            $meta_fields['avito_condition'] = $avito_condition;
+        }
+        
+        $avito_goods_type = get_post_meta($product->get_id(), 'avito_goods_type', true);
+        if (!empty($avito_goods_type)) {
+            $meta_fields['avito_goods_type'] = $avito_goods_type;
+        }
+        
+        $avito_goods_subtype = get_post_meta($product->get_id(), 'avito_goods_subtype', true);
+        if (!empty($avito_goods_subtype)) {
+            $meta_fields['avito_goods_subtype'] = $avito_goods_subtype;
+        }
+        
+        $avito_interior_subtype = get_post_meta($product->get_id(), 'avito_interior_subtype', true);
+        if (!empty($avito_interior_subtype)) {
+            $meta_fields['avito_interior_subtype'] = $avito_interior_subtype;
+        }
+        
         if (!empty($meta_fields)) {
             $product_data['meta_fields'] = $meta_fields;
         }
@@ -651,6 +676,38 @@ function wc_avito_export_debug_info() {
                 'label' => 'Цена для Avito',
                 'required' => false,
                 'description' => 'Переопределяет стандартную цену товара в WooCommerce. Если не указана, используется цена из WooCommerce'
+            ),
+            'avito_ad_type' => array(
+                'type' => 'select',
+                'label' => 'AdType',
+                'required' => true,
+                'values' => array('Товар произведён мной', 'Товар куплен на продажу'),
+                'description' => 'Обязательное поле Avito: тип объявления'
+            ),
+            'avito_condition' => array(
+                'type' => 'select',
+                'label' => 'Condition',
+                'required' => true,
+                'values' => array('Новое', 'Б/у'),
+                'description' => 'Обязательное поле Avito: состояние товара'
+            ),
+            'avito_goods_type' => array(
+                'type' => 'text',
+                'label' => 'GoodsType',
+                'required' => true,
+                'description' => 'Обязательное поле Avito: тип товара внутри категории'
+            ),
+            'avito_goods_subtype' => array(
+                'type' => 'text',
+                'label' => 'GoodsSubType',
+                'required' => true,
+                'description' => 'Обязательное поле Avito: подтип товара'
+            ),
+            'avito_interior_subtype' => array(
+                'type' => 'text',
+                'label' => 'InteriorSubType',
+                'required' => true,
+                'description' => 'Обязательное поле Avito: подтип интерьера'
             )
         ),
         'category_meta_fields' => array(
