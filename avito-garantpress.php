@@ -6,7 +6,7 @@
  * Version: 1.0.0
  * Author: GarantPress
  * Author URI: https://onetrickweb.com/
- * Text Domain: garantpress-avito
+ * Text Domain: avito-garantpress
  * Domain Path: /languages
  * Requires at least: 5.0
  * Requires PHP: 7.2
@@ -114,7 +114,7 @@ add_action('plugins_loaded', 'wc_avito_vdom_check_dependencies');
 function wc_avito_vdom_woocommerce_notice() {
     ?>
     <div class="error">
-        <p><?php _e('Для работы плагина "WC Avito XML Export" требуется установленный и активированный плагин WooCommerce.', 'wc-avito-vdom'); ?></p>
+        <p><?php _e('Для работы плагина "WC Avito XML Export" требуется установленный и активированный плагин WooCommerce.', 'avito-garantpress'); ?></p>
     </div>
     <?php
 }

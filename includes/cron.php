@@ -17,32 +17,32 @@ function wc_avito_xml_add_cron_intervals($schedules) {
     // Добавляем различные интервалы
     $schedules['fifteen_minutes'] = array(
         'interval' => 900,
-        'display'  => __('Every 15 minutes', 'wc-avito-vdom')
+        'display'  => __('Every 15 minutes', 'avito-garantpress')
     );
     
     $schedules['thirty_minutes'] = array(
         'interval' => 1800,
-        'display'  => __('Every 30 minutes', 'wc-avito-vdom')
+        'display'  => __('Every 30 minutes', 'avito-garantpress')
     );
     
     $schedules['two_hours'] = array(
         'interval' => 7200,
-        'display'  => __('Every 2 hours', 'wc-avito-vdom')
+        'display'  => __('Every 2 hours', 'avito-garantpress')
     );
     
     $schedules['four_hours'] = array(
         'interval' => 14400,
-        'display'  => __('Every 4 hours', 'wc-avito-vdom')
+        'display'  => __('Every 4 hours', 'avito-garantpress')
     );
     
     $schedules['six_hours'] = array(
         'interval' => 21600,
-        'display'  => __('Every 6 hours', 'wc-avito-vdom')
+        'display'  => __('Every 6 hours', 'avito-garantpress')
     );
     
     $schedules['twelve_hours'] = array(
         'interval' => 43200,
-        'display'  => __('Every 12 hours', 'wc-avito-vdom')
+        'display'  => __('Every 12 hours', 'avito-garantpress')
     );
     
     return $schedules;
