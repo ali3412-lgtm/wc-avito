@@ -33,7 +33,7 @@ function generate_avito_xml() {
     if (!empty($avito_xml_errors)) {
         $errors_node = $xml->addChild('Errors');
         foreach ($avito_xml_errors as $error) {
-            $errors_node->addChild('Error', htmlspecialchars($error));
+            $errors_node->addChild('Error', $error);
         }
     }
 
@@ -210,25 +210,25 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
         }
     }
     
-    $ad->addChild('Category', htmlspecialchars($avito_category));
+    $ad->addChild('Category', $avito_category);
     
     // Добавляем поле ServiceType из категории
     if ($category_id) {
         $service_type = get_term_meta($category_id, 'avito_service_type', true);
         if (!empty($service_type)) {
-            $ad->addChild('ServiceType', htmlspecialchars($service_type));
+            $ad->addChild('ServiceType', $service_type);
         }
         
         // Добавляем поле Specialty из категории
         $specialty = get_term_meta($category_id, 'avito_specialty', true);
         if (!empty($specialty)) {
-            $ad->addChild('Specialty', htmlspecialchars($specialty));
+            $ad->addChild('Specialty', $specialty);
         }
         
         // Добавляем поле AvitoId из категории
         $avito_id = get_term_meta($category_id, 'avitoid', true);
         if (!empty($avito_id)) {
-            $ad->addChild('AvitoId', htmlspecialchars($avito_id));
+            $ad->addChild('AvitoId', $avito_id);
         }
     }
     
@@ -355,48 +355,48 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
         if (!empty($scope)) {
             // Заменяем ", " на "|" в поле Scope
             $scope = str_replace(', ', '|', $scope);
-            $ad->addChild('Scope', htmlspecialchars($scope));
+            $ad->addChild('Scope', $scope);
         }
         
         // Используем логотип из общих настроек
         $logo = get_option('wc_avito_xml_logo', '');
         if (!empty($logo)) {
-            $ad->addChild('Logo', htmlspecialchars($logo));
+            $ad->addChild('Logo', $logo);
         }
         
         $work_format = get_term_meta($category_id, 'avito_workformat', true);
         if (!empty($work_format)) {
             // Заменяем ", " на "|" в поле WorkFormat
             $work_format = str_replace(', ', '|', $work_format);
-            $ad->addChild('WorkFormat', htmlspecialchars($work_format));
+            $ad->addChild('WorkFormat', $work_format);
         }
         
         $work_experience = get_term_meta($category_id, 'avito_work_experience', true);
         if (!empty($work_experience)) {
-            $ad->addChild('WorkExperience', htmlspecialchars($work_experience));
+            $ad->addChild('WorkExperience', $work_experience);
         }
         
         $place = get_term_meta($category_id, 'avito_place', true);
         if (!empty($place)) {
-            $ad->addChild('Place', htmlspecialchars($place));
+            $ad->addChild('Place', $place);
         }
         
         // Обрабатываем поле портфолио как URL
         $portfolio = get_term_meta($category_id, 'avito_portfolio', true);
         if (!empty($portfolio)) {
-            $ad->addChild('Portfolio', htmlspecialchars($portfolio));
+            $ad->addChild('Portfolio', $portfolio);
         }
         
         // Используем рабочие дни из общих настроек
         $work_days = get_option('wc_avito_xml_work_days', '');
         if (!empty($work_days)) {
-            $ad->addChild('WorkDays', htmlspecialchars($work_days));
+            $ad->addChild('WorkDays', $work_days);
         }
         
         // Обрабатываем предоплату как radio button
         $prepayment = get_term_meta($category_id, 'avito_prepayment', true);
         if (!empty($prepayment)) {
-            $ad->addChild('Prepayment', htmlspecialchars($prepayment));
+            $ad->addChild('Prepayment', $prepayment);
         }
         
         // Обрабатываем checkbox поля
@@ -412,23 +412,23 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
         
         $work_with_legal_entities = get_term_meta($category_id, 'avito_workwithlegalentities', true);
         if (!empty($work_with_legal_entities)) {
-            $ad->addChild('WorkWithLegalEntities', htmlspecialchars($work_with_legal_entities));
+            $ad->addChild('WorkWithLegalEntities', $work_with_legal_entities);
         }
         
         // Добавляем координаты из общих настроек
         $latitude = get_option('wc_avito_xml_latitude', '');
         $longitude = get_option('wc_avito_xml_longitude', '');
         if (!empty($latitude)) {
-            $ad->addChild('Latitude', htmlspecialchars($latitude));
+            $ad->addChild('Latitude', $latitude);
         }
         if (!empty($longitude)) {
-            $ad->addChild('Longitude', htmlspecialchars($longitude));
+            $ad->addChild('Longitude', $longitude);
         }
         
         // Добавляем устройства для звонков
         $calls_devices = get_term_meta($category_id, 'avito_calls_devices', true);
         if (!empty($calls_devices)) {
-            $ad->addChild('CallsDevices', htmlspecialchars($calls_devices));
+            $ad->addChild('CallsDevices', $calls_devices);
         }
     }
     
@@ -459,7 +459,7 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
         // Поле Promo
         $promo = get_term_meta($category_id, 'avito_promo', true);
         if (!empty($promo)) {
-            $ad->addChild('Promo', htmlspecialchars($promo));
+            $ad->addChild('Promo', $promo);
         }
         
         // Поля для PromoManualOptions
@@ -473,13 +473,13 @@ function set_common_ad_settings($ad, $product = null, $is_active = true, $catego
             $item = $promo_manual_options->addChild('Item');
             
             if (!empty($region)) {
-                $item->addChild('Region', htmlspecialchars($region));
+                $item->addChild('Region', $region);
             }
             if (!empty($bid)) {
-                $item->addChild('Bid', htmlspecialchars($bid));
+                $item->addChild('Bid', $bid);
             }
             if (!empty($daily_limit)) {
-                $item->addChild('DailyLimit', htmlspecialchars($daily_limit));
+                $item->addChild('DailyLimit', $daily_limit);
             }
         }
     }
@@ -511,9 +511,12 @@ function add_custom_ad($xml, $type) {
 
     $images = $ad->addChild('Images');
 
-    // Добавляем иконку
-    $icon_image = $images->addChild('Image');
-    $icon_image->addAttribute('url', 'https://instrument-izhevsk.ru/wp-content/uploads/2024/05/icon.png');
+    // Добавляем иконку из настроек логотипа
+    $logo_url = get_option('wc_avito_xml_logo', '');
+    if (!empty($logo_url)) {
+        $icon_image = $images->addChild('Image');
+        $icon_image->addAttribute('url', $logo_url);
+    }
 
     // Добавляем изображения категорий
     $category_images = get_category_images($type);
@@ -601,15 +604,15 @@ function add_category_ad($xml, $category, $is_active) {
     
     // Используем поле avito_title или стандартный заголовок
     $custom_title = get_term_meta($category->term_id, 'avito_title', true);
-    $title = !empty($custom_title) ? $custom_title : $category->name . ' – аренда в Ижевске';
-    $ad->addChild('Title', htmlspecialchars($title));
+    $title = !empty($custom_title) ? $custom_title : $category->name . ' – аренда';
+    $ad->addChild('Title', $title);
 
     // Используем поле avito_description или стандартное описание
     $custom_description = get_term_meta($category->term_id, 'avito_description', true);
     if (!empty($custom_description)) {
         $description = $custom_description;
     } else {
-        $description = '<p>' . $category->name . ' в аренду в Ижевске.</p>';
+        $description = '<p>' . $category->name . ' в аренду.</p>';
         $description .= get_common_description();
         $description .= '<p>Нужны ' . mb_strtolower($category->name) . '? Обращайтесь, постараемся подобрать!</p>';
     }
@@ -774,27 +777,27 @@ function add_product_ad($xml, $product, $is_active) {
     // Обязательные для Avito поля товара
     $ad_type = get_post_meta($product->get_id(), 'avito_ad_type', true);
     if (!empty($ad_type)) {
-        $ad->addChild('AdType', htmlspecialchars($ad_type));
+        $ad->addChild('AdType', $ad_type);
     }
 
     $condition = get_post_meta($product->get_id(), 'avito_condition', true);
     if (!empty($condition)) {
-        $ad->addChild('Condition', htmlspecialchars($condition));
+        $ad->addChild('Condition', $condition);
     }
 
     $goods_type = get_post_meta($product->get_id(), 'avito_goods_type', true);
     if (!empty($goods_type)) {
-        $ad->addChild('GoodsType', htmlspecialchars($goods_type));
+        $ad->addChild('GoodsType', $goods_type);
     }
 
     $goods_subtype = get_post_meta($product->get_id(), 'avito_goods_subtype', true);
     if (!empty($goods_subtype)) {
-        $ad->addChild('GoodsSubType', htmlspecialchars($goods_subtype));
+        $ad->addChild('GoodsSubType', $goods_subtype);
     }
 
     $interior_subtype = get_post_meta($product->get_id(), 'avito_interior_subtype', true);
     if (!empty($interior_subtype)) {
-        $ad->addChild('InteriorSubType', htmlspecialchars($interior_subtype));
+        $ad->addChild('InteriorSubType', $interior_subtype);
     }
 
     // Promo и PromoManualOptions с приоритетом: товар -> категория
@@ -803,7 +806,7 @@ function add_product_ad($xml, $product, $is_active) {
         $promo = get_term_meta($category_id, 'avito_promo', true);
     }
     if (!empty($promo)) {
-        $ad->addChild('Promo', htmlspecialchars($promo));
+        $ad->addChild('Promo', $promo);
     }
 
     $region = get_post_meta($product->get_id(), 'avito_region', true);
@@ -826,13 +829,13 @@ function add_product_ad($xml, $product, $is_active) {
         $item = $promo_manual_options->addChild('Item');
 
         if (!empty($region)) {
-            $item->addChild('Region', htmlspecialchars($region));
+            $item->addChild('Region', $region);
         }
         if (!empty($bid)) {
-            $item->addChild('Bid', htmlspecialchars($bid));
+            $item->addChild('Bid', $bid);
         }
         if (!empty($daily_limit)) {
-            $item->addChild('DailyLimit', htmlspecialchars($daily_limit));
+            $item->addChild('DailyLimit', $daily_limit);
         }
     }
 
@@ -845,7 +848,22 @@ function add_product_ad($xml, $product, $is_active) {
  * Формирует общее описание
  */
 function get_common_description() {
-    $description = '<p><strong>Адрес получения:</strong> г. Ижевск, ул. Фурманова, 57.<br /><strong>Доставка возможна</strong>, обсуждается индивидуально.<br /><strong>Режим работы</strong>&nbsp;&ndash;&nbsp;пн-пт: с 9.00 до 19.00, сб-вс: с 9.00&nbsp;до 17.00</p>';
+    $address = get_option('wc_avito_xml_address', '');
+    $work_days = get_option('wc_avito_xml_work_days', '');
+
+    $description = '';
+
+    if (!empty($address)) {
+        $description .= '<p><strong>Адрес получения:</strong> ' . $address . '.<br />';
+    }
+
+    $description .= '<strong>Доставка возможна</strong>, обсуждается индивидуально.<br />';
+
+    if (!empty($work_days)) {
+        $description .= '<strong>Режим работы</strong>: ' . $work_days . '</p>';
+    } else {
+        $description .= '</p>';
+    }
 
     $description .= '<p>Получение по одному из документов: паспорт, водительское удостоверение или военный билет.</p>';
 
